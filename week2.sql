@@ -51,4 +51,25 @@ insert into Depositor values('Avinash',1),('Dinesh',2),('Nikil',4),('Ravi',5),('
 insert into loan values(1,'SBI_Chamrajpet',1000),(2,'SBI_ResidencyRoad',2000),(3,'SBI_ShivajiRoad',3000),
 (4,'SBI_ParlimentRoad',4000),(5,'SBI_Jantarmantar',5000);
 
-select cust_name from depositor where 
+select C.cust_name 
+from BankCust C
+where exists (
+				select D.cust_name, count(D.cust_name)
+                from depositor D,accounts BA
+                where
+                D.accno = BA.accno AND C.cust_name = D.cust_name AND BA.branch_name='SBI_ResidencyRoad' 
+                group by D.cust_name
+                having count(D.cust_name) >=2);
+                
+select BC.cust_name from BankCust BC
+where not exists(
+					select branch_name from branch branch_city = 'Delhi'
+                    except
+                    select BA.branch_name from depositor D , accounts BA
+                    where D.accno = BA.accno AND BC.cust_name = D.cust_name);
+                    
+delete from accounts 
+where branch_name in (select branch_name 
+					  from branch
+                      where branch_city='Bombay');
+select * from accounts;
