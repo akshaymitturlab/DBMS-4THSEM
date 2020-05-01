@@ -64,7 +64,7 @@ where exists (
 select BC.cust_name from BankCust BC
 where not exists(
 					select branch_name from branch branch_city = 'Delhi'
-                    except
+                    minus
                     select BA.branch_name from depositor D , accounts BA
                     where D.accno = BA.accno AND BC.cust_name = D.cust_name);
                     
